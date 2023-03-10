@@ -1,22 +1,14 @@
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdatePatchUserDto } from './dto/upate-patch-user.dto';
+import { UpdatePutUserDto } from './dto/update-put-user.dto';
+import { UserService } from './user.service';
 export declare class UserController {
-    create(body: any): Promise<{
-        body: any;
-    }>;
-    list(): Promise<{
-        users: any[];
-    }>;
-    readOne(params: any): Promise<{
-        user: {};
-        params: any;
-    }>;
-    update(body: any, params: any): Promise<{
-        method: string;
-        body: any;
-        params: any;
-    }>;
-    updatePartial(body: any, params: any): Promise<{
-        method: string;
-        body: any;
-        params: any;
-    }>;
+    private readonly userService;
+    constructor(userService: UserService);
+    create(data: CreateUserDto): Promise<import(".prisma/client").User>;
+    list(): Promise<import(".prisma/client").User[]>;
+    readOne(id: number): Promise<import(".prisma/client").User>;
+    update(data: UpdatePutUserDto, id: number): Promise<import(".prisma/client").User>;
+    updatePartial(data: UpdatePatchUserDto, id: number): Promise<import(".prisma/client").User>;
+    delete(id: number): Promise<import(".prisma/client").User>;
 }
