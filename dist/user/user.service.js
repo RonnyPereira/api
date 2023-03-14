@@ -25,6 +25,7 @@ let UserService = class UserService {
         return this.prisma.user.findMany();
     }
     async show(id) {
+        await this.exists(id);
         return this.prisma.user.findUnique({
             where: {
                 id,
@@ -76,7 +77,11 @@ let UserService = class UserService {
         });
     }
     async exists(id) {
-        if (!(await this.show(id))) {
+        if (!(await this.prisma.user.count({
+            where: {
+                id,
+            },
+        }))) {
             throw new common_1.NotFoundException(`Usuário ${id} não existe`);
         }
     }

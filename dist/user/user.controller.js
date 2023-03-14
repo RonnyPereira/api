@@ -14,6 +14,8 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
+const param_id_decorator_1 = require("../decorators/param-id.decorator");
+const log_interceptor_1 = require("../interceptors/log.interceptor");
 const create_user_dto_1 = require("./dto/create-user.dto");
 const upate_patch_user_dto_1 = require("./dto/upate-patch-user.dto");
 const update_put_user_dto_1 = require("./dto/update-put-user.dto");
@@ -56,7 +58,7 @@ __decorate([
 ], UserController.prototype, "list", null);
 __decorate([
     (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(0, (0, param_id_decorator_1.ParamId)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
@@ -64,7 +66,7 @@ __decorate([
 __decorate([
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, param_id_decorator_1.ParamId)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [update_put_user_dto_1.UpdatePutUserDto, Number]),
     __metadata("design:returntype", Promise)
@@ -72,19 +74,20 @@ __decorate([
 __decorate([
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, param_id_decorator_1.ParamId)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [upate_patch_user_dto_1.UpdatePatchUserDto, Number]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "updatePartial", null);
 __decorate([
     (0, common_1.Delete)(':id'),
-    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(0, (0, param_id_decorator_1.ParamId)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "delete", null);
 UserController = __decorate([
+    (0, common_1.UseInterceptors)(log_interceptor_1.LogInterceptor),
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserController);
