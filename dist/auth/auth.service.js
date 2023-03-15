@@ -20,7 +20,7 @@ let AuthService = class AuthService {
         this.prisma = prisma;
         this.userService = userService;
     }
-    async creatToken(user) {
+    creatToken(user) {
         return {
             acessToken: this.jwtService.sign({
                 id: user.id,
@@ -34,7 +34,7 @@ let AuthService = class AuthService {
             }),
         };
     }
-    async checkToken(token) {
+    checkToken(token) {
         try {
             const data = this.jwtService.verify(token, {
                 audience: 'users',
@@ -46,7 +46,7 @@ let AuthService = class AuthService {
             throw new common_1.BadRequestException(e);
         }
     }
-    async isValidToken(token) {
+    isValidToken(token) {
         try {
             this.checkToken(token);
             return true;

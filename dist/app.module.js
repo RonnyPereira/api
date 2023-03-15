@@ -11,19 +11,12 @@ const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 const auth_module_1 = require("./auth/auth.module");
-const user_id_check_middleware_1 = require("./middlewares/user-id-check.middleware");
 const user_module_1 = require("./user/user.module");
 let AppModule = class AppModule {
-    configure(consumer) {
-        consumer.apply(user_id_check_middleware_1.UserIdCheckMiddlware).forRoutes({
-            path: 'users/:id',
-            method: common_1.RequestMethod.ALL,
-        });
-    }
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [user_module_1.UserModule, auth_module_1.AuthModule],
+        imports: [(0, common_1.forwardRef)(() => user_module_1.UserModule), (0, common_1.forwardRef)(() => auth_module_1.AuthModule)],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
         exports: [app_service_1.AppService],

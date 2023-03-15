@@ -8,11 +8,11 @@ export declare class AuthService {
     private readonly prisma;
     private readonly userService;
     constructor(jwtService: JwtService, prisma: PrismaService, userService: UserService);
-    creatToken(user: User): Promise<{
+    creatToken(user: User): {
         acessToken: string;
-    }>;
-    checkToken(token: string): Promise<any>;
-    isValidToken(token: string): Promise<boolean>;
+    };
+    checkToken(token: string): any;
+    isValidToken(token: string): boolean;
     login(email: string, password: string): Promise<{
         acessToken: string;
     }>;

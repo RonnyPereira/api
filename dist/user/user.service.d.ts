@@ -8,8 +8,8 @@ export declare class UserService {
     create(data: CreateUserDto): Promise<import(".prisma/client").User>;
     list(): Promise<import(".prisma/client").User[]>;
     show(id: number): Promise<import(".prisma/client").User>;
-    update(id: number, { email, name, password, birthAt }: UpdatePutUserDto): Promise<import(".prisma/client").User>;
-    updatePartial(id: number, { email, name, password, birthAt }: UpdatePatchUserDto): Promise<import(".prisma/client").User>;
+    update(id: number, { email, name, password, birthAt, role }: UpdatePutUserDto): Promise<import(".prisma/client").User>;
+    updatePartial(id: number, { email, name, password, birthAt, role }: UpdatePatchUserDto): Promise<import(".prisma/client").User>;
     delete(id: number): Promise<import(".prisma/client").User>;
     exists(id: number): Promise<void>;
 }

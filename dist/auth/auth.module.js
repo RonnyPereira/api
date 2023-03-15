@@ -21,11 +21,12 @@ AuthModule = __decorate([
             jwt_1.JwtModule.register({
                 secret: 'YU6U3AFytMAeRfpnmVg3nTXG9bzsYwJe',
             }),
-            user_module_1.UserModule,
+            (0, common_1.forwardRef)(() => user_module_1.UserModule),
             prisma_module_1.PrismaModule,
         ],
         controllers: [auth_controller_1.AuthController],
         providers: [auth_service_1.AuthService],
+        exports: [auth_service_1.AuthService],
     })
 ], AuthModule);
 exports.AuthModule = AuthModule;

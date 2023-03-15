@@ -7,7 +7,7 @@ export declare class UserController {
     constructor(userService: UserService);
     create(data: CreateUserDto): Promise<import(".prisma/client").User>;
     list(): Promise<import(".prisma/client").User[]>;
-    readOne(id: number): Promise<import(".prisma/client").User>;
+    show(id: number): Promise<import(".prisma/client").User>;
     update(data: UpdatePutUserDto, id: number): Promise<import(".prisma/client").User>;
     updatePartial(data: UpdatePatchUserDto, id: number): Promise<import(".prisma/client").User>;
     delete(id: number): Promise<import(".prisma/client").User>;

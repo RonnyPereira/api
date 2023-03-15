@@ -2,7 +2,6 @@ import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { AuthForgetDto } from './dto/auth-forget.dto';
 import { AuthLoginDto } from './dto/auth-login.dto';
-import { AuthMeDto } from './dto/auth-me.dto';
 import { AuthRegisterDto } from './dto/auth-register.dto';
 import { AuthResetDto } from './dto/auth-reset.dto';
 export declare class AuthController {
@@ -19,5 +18,7 @@ export declare class AuthController {
     reset({ password, token }: AuthResetDto): Promise<{
         acessToken: string;
     }>;
-    me(body: AuthMeDto): Promise<any>;
+    me(user: any): Promise<{
+        user: any;
+    }>;
 }
