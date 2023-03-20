@@ -48,7 +48,7 @@ let UserController = class UserController {
     }
 };
 __decorate([
-    (0, role_decorator_1.Roles)(role_enum_1.Role.Admin),
+    (0, role_decorator_1.Roles)(role_enum_1.Role.Admin, role_enum_1.Role.User),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -63,7 +63,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "list", null);
 __decorate([
-    (0, role_decorator_1.Roles)(role_enum_1.Role.Admin),
+    (0, role_decorator_1.Roles)(role_enum_1.Role.Admin, role_enum_1.Role.User),
     (0, common_1.Get)(':id'),
     __param(0, (0, param_id_decorator_1.ParamId)()),
     __metadata("design:type", Function),
@@ -71,7 +71,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "show", null);
 __decorate([
-    (0, role_decorator_1.Roles)(role_enum_1.Role.Admin),
+    (0, role_decorator_1.Roles)(role_enum_1.Role.Admin, role_enum_1.Role.User),
     (0, common_1.Put)(':id'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, param_id_decorator_1.ParamId)()),
@@ -80,7 +80,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "update", null);
 __decorate([
-    (0, role_decorator_1.Roles)(role_enum_1.Role.Admin),
+    (0, role_decorator_1.Roles)(role_enum_1.Role.Admin, role_enum_1.Role.User),
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, param_id_decorator_1.ParamId)()),
@@ -89,7 +89,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "updatePartial", null);
 __decorate([
-    (0, role_decorator_1.Roles)(role_enum_1.Role.Admin),
+    (0, role_decorator_1.Roles)(role_enum_1.Role.Admin, role_enum_1.Role.User),
     (0, common_1.Delete)(':id'),
     __param(0, (0, param_id_decorator_1.ParamId)()),
     __metadata("design:type", Function),
@@ -97,6 +97,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "delete", null);
 UserController = __decorate([
+    (0, role_decorator_1.Roles)(role_enum_1.Role.User),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, role_guard_1.RoleGuard),
     (0, common_1.UseInterceptors)(log_interceptor_1.LogInterceptor),
     (0, common_1.Controller)('users'),

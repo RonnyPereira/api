@@ -22,6 +22,7 @@ let RoleGuard = class RoleGuard {
             context.getHandler(),
             context.getClass(),
         ]);
+        console.log({ requeridRoles });
         if (!requeridRoles) {
             return true;
         }

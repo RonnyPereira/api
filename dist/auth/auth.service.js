@@ -14,6 +14,7 @@ const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const prisma_service_1 = require("../prisma/prisma.service");
 const user_service_1 = require("../user/user.service");
+const bcrypt = require("bcrypt");
 let AuthService = class AuthService {
     constructor(jwtService, prisma, userService) {
         this.jwtService = jwtService;
@@ -59,10 +60,12 @@ let AuthService = class AuthService {
         const user = await this.prisma.user.findFirst({
             where: {
                 email,
-                password,
             },
         });
         if (!user) {
+            throw new common_1.UnauthorizedException('Email e/ou senha incorretos.');
+        }
+        if (!(await bcrypt.compare(password, user.password))) {
             throw new common_1.UnauthorizedException('Email e/ou senha incorretos.');
         }
         return this.creatToken(user);

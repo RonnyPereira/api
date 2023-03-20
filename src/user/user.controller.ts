@@ -20,12 +20,13 @@ import { UpdatePatchUserDto } from './dto/upate-patch-user.dto';
 import { UpdatePutUserDto } from './dto/update-put-user.dto';
 import { UserService } from './user.service';
 
+@Roles(Role.User)
 @UseGuards(AuthGuard, RoleGuard)
 @UseInterceptors(LogInterceptor)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.User)
   @Post()
   async create(@Body() data: CreateUserDto) {
     return this.userService.create(data);
@@ -35,22 +36,22 @@ export class UserController {
   async list() {
     return this.userService.list();
   }
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.User)
   @Get(':id')
   async show(@ParamId() id: number) {
     return this.userService.show(id);
   }
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.User)
   @Put(':id')
   async update(@Body() data: UpdatePutUserDto, @ParamId() id: number) {
     return this.userService.update(id, data);
   }
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.User)
   @Patch(':id')
   async updatePartial(@Body() data: UpdatePatchUserDto, @ParamId() id: number) {
     return this.userService.updatePartial(id, data);
   }
-  @Roles(Role.Admin)
+  @Roles(Role.Admin, Role.User)
   @Delete(':id')
   async delete(@ParamId() id: number) {
     return this.userService.delete(id);
