@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
+const file_module_1 = require("../file/file.module");
 const prisma_module_1 = require("../prisma/prisma.module");
 const user_module_1 = require("../user/user.module");
 const auth_controller_1 = require("./auth.controller");
@@ -23,6 +24,7 @@ AuthModule = __decorate([
             }),
             (0, common_1.forwardRef)(() => user_module_1.UserModule),
             prisma_module_1.PrismaModule,
+            file_module_1.FileModule,
         ],
         controllers: [auth_controller_1.AuthController],
         providers: [auth_service_1.AuthService],

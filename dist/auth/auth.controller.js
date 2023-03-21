@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
 const user_decorator_1 = require("../decorators/user.decorator");
 const auth_guard_1 = require("../guards/auth.guard");
 const user_service_1 = require("../user/user.service");
@@ -22,10 +23,13 @@ const auth_forget_dto_1 = require("./dto/auth-forget.dto");
 const auth_login_dto_1 = require("./dto/auth-login.dto");
 const auth_register_dto_1 = require("./dto/auth-register.dto");
 const auth_reset_dto_1 = require("./dto/auth-reset.dto");
+const path_1 = require("path");
+const file_service_1 = require("../file/file.service");
 let AuthController = class AuthController {
-    constructor(userService, authService) {
+    constructor(userService, authService, fileService) {
         this.userService = userService;
         this.authService = authService;
+        this.fileService = fileService;
     }
     async login({ email, password }) {
         return this.authService.login(email, password);
@@ -41,6 +45,16 @@ let AuthController = class AuthController {
     }
     async me(user) {
         return { user };
+    }
+    async uploadPhoto(user, photo) {
+        const path = (0, path_1.join)(__dirname, '..', '..', 'storage', 'photos', `photo-${user.id}.png`);
+        try {
+            await this.fileService.upload(photo, path);
+        }
+        catch (e) {
+            throw new common_1.BadRequestException(e);
+        }
+        return { sucess: true };
     }
 };
 __decorate([
@@ -79,10 +93,21 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "me", null);
+__decorate([
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.Post)('photo'),
+    __param(0, (0, user_decorator_1.User)()),
+    __param(1, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "uploadPhoto", null);
 AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [user_service_1.UserService,
-        auth_service_1.AuthService])
+        auth_service_1.AuthService,
+        file_service_1.FileService])
 ], AuthController);
 exports.AuthController = AuthController;
 //# sourceMappingURL=auth.controller.js.map
