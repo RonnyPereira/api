@@ -27,4 +27,12 @@ export declare class AuthController {
     uploadPhoto(user: any, photo: Express.Multer.File): Promise<{
         sucess: boolean;
     }>;
+    uploadFiles(user: any, files: Express.Multer.File[]): Promise<Express.Multer.File[]>;
+    uploadFilesFields(user: any, files: {
+        photo: Express.Multer.File;
+        documents: Express.Multer.File[];
+    }): Promise<{
+        photo: Express.Multer.File;
+        documents: Express.Multer.File[];
+    }>;
 }

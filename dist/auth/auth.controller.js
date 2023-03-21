@@ -56,6 +56,12 @@ let AuthController = class AuthController {
         }
         return { sucess: true };
     }
+    async uploadFiles(user, files) {
+        return files;
+    }
+    async uploadFilesFields(user, files) {
+        return files;
+    }
 };
 __decorate([
     (0, common_1.Post)('login'),
@@ -103,6 +109,35 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "uploadPhoto", null);
+__decorate([
+    (0, common_1.UseInterceptors)((0, platform_express_1.FilesInterceptor)('files')),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.Post)('files'),
+    __param(0, (0, user_decorator_1.User)()),
+    __param(1, (0, common_1.UploadedFiles)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Array]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "uploadFiles", null);
+__decorate([
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([
+        {
+            name: 'photo',
+            maxCount: 1,
+        },
+        {
+            name: 'documents',
+            maxCount: 10,
+        },
+    ])),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.Post)('files-fields'),
+    __param(0, (0, user_decorator_1.User)()),
+    __param(1, (0, common_1.UploadedFiles)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "uploadFilesFields", null);
 AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [user_service_1.UserService,
