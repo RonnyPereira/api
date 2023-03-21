@@ -104,7 +104,14 @@ __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.Post)('photo'),
     __param(0, (0, user_decorator_1.User)()),
-    __param(1, (0, common_1.UploadedFile)()),
+    __param(1, (0, common_1.UploadedFile)(new common_1.ParseFilePipe({
+        validators: [
+            new common_1.FileTypeValidator({ fileType: 'image/png' }),
+            new common_1.MaxFileSizeValidator({
+                maxSize: 1024 * 20,
+            }),
+        ],
+    }))),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
