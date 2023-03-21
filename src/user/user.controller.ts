@@ -9,6 +9,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { ParamId } from 'src/decorators/param-id.decorator';
 import { Roles } from 'src/decorators/role.decorator';
 import { Role } from 'src/enums/role.enum';
@@ -20,12 +21,14 @@ import { UpdatePatchUserDto } from './dto/upate-patch-user.dto';
 import { UpdatePutUserDto } from './dto/update-put-user.dto';
 import { UserService } from './user.service';
 
-@Roles(Role.User)
 @UseGuards(AuthGuard, RoleGuard)
 @UseInterceptors(LogInterceptor)
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Throttle(20, 60) //Altera a regra do Throttle do modulo
+  @SkipThrottle() // Ignorar essa rota no Throttle guard
   @Roles(Role.Admin, Role.User)
   @Post()
   async create(@Body() data: CreateUserDto) {

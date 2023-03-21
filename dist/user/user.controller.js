@@ -14,6 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
+const throttler_1 = require("@nestjs/throttler");
 const param_id_decorator_1 = require("../decorators/param-id.decorator");
 const role_decorator_1 = require("../decorators/role.decorator");
 const role_enum_1 = require("../enums/role.enum");
@@ -48,6 +49,8 @@ let UserController = class UserController {
     }
 };
 __decorate([
+    (0, throttler_1.Throttle)(20, 60),
+    (0, throttler_1.SkipThrottle)(),
     (0, role_decorator_1.Roles)(role_enum_1.Role.Admin, role_enum_1.Role.User),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
@@ -97,7 +100,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "delete", null);
 UserController = __decorate([
-    (0, role_decorator_1.Roles)(role_enum_1.Role.User),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, role_guard_1.RoleGuard),
     (0, common_1.UseInterceptors)(log_interceptor_1.LogInterceptor),
     (0, common_1.Controller)('users'),

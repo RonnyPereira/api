@@ -19,7 +19,7 @@ AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
             jwt_1.JwtModule.register({
-                secret: 'YU6U3AFytMAeRfpnmVg3nTXG9bzsYwJe',
+                secret: process.env.JWT_SECRET,
             }),
             (0, common_1.forwardRef)(() => user_module_1.UserModule),
             prisma_module_1.PrismaModule,
