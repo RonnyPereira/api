@@ -15,11 +15,13 @@ const jwt_1 = require("@nestjs/jwt");
 const prisma_service_1 = require("../prisma/prisma.service");
 const user_service_1 = require("../user/user.service");
 const bcrypt = require("bcrypt");
+const dist_1 = require("@nestjs-modules/mailer/dist");
 let AuthService = class AuthService {
-    constructor(jwtService, prisma, userService) {
+    constructor(jwtService, prisma, userService, mailer) {
         this.jwtService = jwtService;
         this.prisma = prisma;
         this.userService = userService;
+        this.mailer = mailer;
     }
     creatToken(user) {
         return {
@@ -79,19 +81,49 @@ let AuthService = class AuthService {
         if (!user) {
             throw new common_1.UnauthorizedException('Email está incorreto');
         }
+        const token = this.jwtService.sign({
+            id: user.id,
+        }, {
+            expiresIn: '30 minutes',
+            subject: String(user.id),
+            issuer: 'forget',
+            audience: 'users',
+        });
+        await this.mailer.sendMail({
+            subject: 'Recuperação de Senha',
+            to: 'ronny.perera@ipdec.org',
+            template: 'forget',
+            context: {
+                name: user.name,
+                token,
+            },
+        });
         return true;
     }
     async reset(password, token) {
-        const id = 0;
-        const user = await this.prisma.user.update({
-            where: {
-                id,
-            },
-            data: {
-                password,
-            },
-        });
-        return this.creatToken(user);
+        try {
+            const data = this.jwtService.verify(token, {
+                issuer: 'forget',
+                audience: 'users',
+            });
+            if (isNaN(Number(data.id))) {
+                throw new common_1.BadRequestException('Token é inválido');
+            }
+            const salt = await bcrypt.genSalt();
+            password = await bcrypt.hash(password, salt);
+            const user = await this.prisma.user.update({
+                where: {
+                    id: data.id,
+                },
+                data: {
+                    password,
+                },
+            });
+            return this.creatToken(user);
+        }
+        catch (e) {
+            throw new common_1.BadRequestException(e);
+        }
     }
     async register(data) {
         const user = await this.userService.create(data);
@@ -102,7 +134,8 @@ AuthService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [jwt_1.JwtService,
         prisma_service_1.PrismaService,
-        user_service_1.UserService])
+        user_service_1.UserService,
+        dist_1.MailerService])
 ], AuthService);
 exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map
