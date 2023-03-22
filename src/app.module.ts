@@ -8,6 +8,8 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity } from './user/entity/user.entity';
 
 @Module({
   imports: [
@@ -17,8 +19,8 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
       limit: 10,
       ignoreUserAgents: [/googlebot/gi], // fonte que vai fazer mais de 10 requisiçoes
     }),
-    forwardRef(() => UserModule),
-    forwardRef(() => AuthModule),
+    forwardRef(() => UserModule), // declaração nesse formato e para fugir do loop
+    forwardRef(() => AuthModule), // declaração nesse formato e para fugir do loop
 
     //controle de email
     MailerModule.forRoot({
@@ -40,6 +42,16 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
           strict: true,
         },
       },
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      entities: [UserEntity],
+      synchronize: true,
     }),
   ],
   controllers: [AppController],
