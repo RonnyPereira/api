@@ -8,6 +8,9 @@ import { UserService } from 'src/user/user.service';
 import { AuthRegisterDto } from './dto/auth-register.dto';
 import * as bcrypt from 'bcrypt';
 import { MailerService } from '@nestjs-modules/mailer/dist';
+import { UserEntity } from 'src/user/entity/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -15,9 +18,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
     private readonly mailer: MailerService,
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
   ) {}
 
-  creatToken(user: User) {
+  creatToken(user: UserEntity) {
     return {
       acessToken: this.jwtService.sign(
         {
@@ -57,10 +62,8 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        email,
-      },
+    const user = await this.usersRepository.findOneBy({
+      email,
     });
     if (!user) {
       throw new UnauthorizedException('Email e/ou senha incorretos.');
@@ -73,10 +76,8 @@ export class AuthService {
   }
 
   async forget(email: string) {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        email,
-      },
+    const user = await this.usersRepository.findOneBy({
+      email,
     });
     if (!user) {
       throw new UnauthorizedException('Email está incorreto');
@@ -120,14 +121,12 @@ export class AuthService {
       const salt = await bcrypt.genSalt();
       password = await bcrypt.hash(password, salt);
 
-      const user = await this.prisma.user.update({
-        where: {
-          id: data.id,
-        },
-        data: {
-          password,
-        },
+      await this.usersRepository.update(Number(data.id), {
+        password,
       });
+
+      const user = await this.userService.show(Number(data.id));
+
       return this.creatToken(user);
     } catch (e) {
       throw new BadRequestException(e);

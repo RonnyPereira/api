@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserEntity = void 0;
+const role_enum_1 = require("../../enums/role.enum");
 const typeorm_1 = require("typeorm");
 let UserEntity = class UserEntity {
 };
@@ -43,7 +44,7 @@ __decorate([
         type: 'date',
         nullable: true,
     }),
-    __metadata("design:type", String)
+    __metadata("design:type", Date)
 ], UserEntity.prototype, "birthAt", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
@@ -55,12 +56,14 @@ __decorate([
 ], UserEntity.prototype, "updatedtAt", void 0);
 __decorate([
     (0, typeorm_1.Column)({
-        enum: [1, 2],
+        default: role_enum_1.Role.User,
     }),
     __metadata("design:type", Number)
 ], UserEntity.prototype, "role", void 0);
 UserEntity = __decorate([
-    (0, typeorm_1.Entity)()
+    (0, typeorm_1.Entity)({
+        name: 'users',
+    })
 ], UserEntity);
 exports.UserEntity = UserEntity;
 //# sourceMappingURL=user.entity.js.map

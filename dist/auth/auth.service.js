@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
@@ -15,11 +18,15 @@ const jwt_1 = require("@nestjs/jwt");
 const user_service_1 = require("../user/user.service");
 const bcrypt = require("bcrypt");
 const dist_1 = require("@nestjs-modules/mailer/dist");
+const user_entity_1 = require("../user/entity/user.entity");
+const typeorm_1 = require("@nestjs/typeorm");
+const typeorm_2 = require("typeorm");
 let AuthService = class AuthService {
-    constructor(jwtService, userService, mailer) {
+    constructor(jwtService, userService, mailer, usersRepository) {
         this.jwtService = jwtService;
         this.userService = userService;
         this.mailer = mailer;
+        this.usersRepository = usersRepository;
     }
     creatToken(user) {
         return {
@@ -57,10 +64,8 @@ let AuthService = class AuthService {
         }
     }
     async login(email, password) {
-        const user = await this.prisma.user.findFirst({
-            where: {
-                email,
-            },
+        const user = await this.usersRepository.findOneBy({
+            email,
         });
         if (!user) {
             throw new common_1.UnauthorizedException('Email e/ou senha incorretos.');
@@ -71,10 +76,8 @@ let AuthService = class AuthService {
         return this.creatToken(user);
     }
     async forget(email) {
-        const user = await this.prisma.user.findFirst({
-            where: {
-                email,
-            },
+        const user = await this.usersRepository.findOneBy({
+            email,
         });
         if (!user) {
             throw new common_1.UnauthorizedException('Email está incorreto');
@@ -109,14 +112,10 @@ let AuthService = class AuthService {
             }
             const salt = await bcrypt.genSalt();
             password = await bcrypt.hash(password, salt);
-            const user = await this.prisma.user.update({
-                where: {
-                    id: data.id,
-                },
-                data: {
-                    password,
-                },
+            await this.usersRepository.update(Number(data.id), {
+                password,
             });
+            const user = await this.userService.show(Number(data.id));
             return this.creatToken(user);
         }
         catch (e) {
@@ -130,9 +129,11 @@ let AuthService = class AuthService {
 };
 AuthService = __decorate([
     (0, common_1.Injectable)(),
+    __param(3, (0, typeorm_1.InjectRepository)(user_entity_1.UserEntity)),
     __metadata("design:paramtypes", [jwt_1.JwtService,
         user_service_1.UserService,
-        dist_1.MailerService])
+        dist_1.MailerService,
+        typeorm_2.Repository])
 ], AuthService);
 exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map

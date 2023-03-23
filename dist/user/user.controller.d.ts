@@ -5,10 +5,10 @@ import { UserService } from './user.service';
 export declare class UserController {
     private readonly userService;
     constructor(userService: UserService);
-    create(data: CreateUserDto): Promise<any>;
-    list(): Promise<any>;
-    show(id: number): Promise<any>;
-    update(data: UpdatePutUserDto, id: number): Promise<any>;
-    updatePartial(data: UpdatePatchUserDto, id: number): Promise<any>;
-    delete(id: number): Promise<any>;
+    create(data: CreateUserDto): Promise<import("./entity/user.entity").UserEntity>;
+    list(): Promise<import("./entity/user.entity").UserEntity[]>;
+    show(id: number): Promise<import("./entity/user.entity").UserEntity>;
+    update(data: UpdatePutUserDto, id: number): Promise<import("typeorm").UpdateResult>;
+    updatePartial(data: UpdatePatchUserDto, id: number): Promise<import("typeorm").UpdateResult>;
+    delete(id: number): Promise<import("typeorm").DeleteResult>;
 }

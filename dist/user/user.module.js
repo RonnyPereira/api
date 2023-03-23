@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const auth_module_1 = require("../auth/auth.module");
 const user_id_check_middleware_1 = require("../middlewares/user-id-check.middleware");
+const user_entity_1 = require("./entity/user.entity");
 const user_controller_1 = require("./user.controller");
 const user_service_1 = require("./user.service");
 let UserModule = class UserModule {
@@ -23,7 +24,10 @@ let UserModule = class UserModule {
 };
 UserModule = __decorate([
     (0, common_1.Module)({
-        imports: [(0, common_1.forwardRef)(() => auth_module_1.AuthModule, typeorm_1.TypeOrmModule)],
+        imports: [
+            (0, common_1.forwardRef)(() => auth_module_1.AuthModule),
+            typeorm_1.TypeOrmModule.forFeature([user_entity_1.UserEntity]),
+        ],
         controllers: [user_controller_1.UserController],
         providers: [user_service_1.UserService],
         exports: [user_service_1.UserService],

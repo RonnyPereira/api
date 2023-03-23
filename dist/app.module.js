@@ -61,6 +61,7 @@ AppModule = __decorate([
                 database: process.env.DB_DATABASE,
                 entities: [user_entity_1.UserEntity],
                 synchronize: true,
+                autoLoadEntities: true,
             }),
         ],
         controllers: [app_controller_1.AppController],

@@ -8,46 +8,52 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
 const common_1 = require("@nestjs/common");
 const bcrypt = require("bcrypt");
+const typeorm_1 = require("typeorm");
+const user_entity_1 = require("./entity/user.entity");
+const typeorm_2 = require("@nestjs/typeorm");
 let UserService = class UserService {
-    constructor() { }
+    constructor(usersRepository) {
+        this.usersRepository = usersRepository;
+    }
     async create(data) {
-        data.password = data.password;
+        if (await this.usersRepository.exist({
+            where: {
+                email: data.email,
+            },
+        })) {
+            throw new common_1.BadRequestException('Este e-mail já esta sendo usado');
+        }
         const salt = await bcrypt.genSalt();
         data.password = await bcrypt.hash(data.password, salt);
-        return await this.prisma.user.create({
-            data,
-        });
+        const user = this.usersRepository.create(data);
+        return this.usersRepository.save(user);
     }
     async list() {
-        return this.prisma.user.findMany();
+        return this.usersRepository.find();
     }
     async show(id) {
         await this.exists(id);
-        return this.prisma.user.findUnique({
-            where: {
-                id,
-            },
+        return this.usersRepository.findOneBy({
+            id,
         });
     }
     async update(id, { email, name, password, birthAt, role }) {
         await this.exists(id);
         const salt = await bcrypt.genSalt();
         password = await bcrypt.hash(password, salt);
-        return this.prisma.user.update({
-            data: {
-                email,
-                name,
-                password,
-                birthAt: birthAt ? new Date(birthAt) : null,
-                role,
-            },
-            where: {
-                id,
-            },
+        return this.usersRepository.update(id, {
+            email,
+            name,
+            password,
+            birthAt: birthAt ? new Date(birthAt) : null,
+            role,
         });
     }
     async updatePartial(id, { email, name, password, birthAt, role }) {
@@ -69,23 +75,14 @@ let UserService = class UserService {
         if (role) {
             data.role = role;
         }
-        return this.prisma.user.update({
-            data,
-            where: {
-                id,
-            },
-        });
+        return this.usersRepository.update(id, data);
     }
     async delete(id) {
         await this.exists(id);
-        return this.prisma.user.delete({
-            where: {
-                id,
-            },
-        });
+        return this.usersRepository.delete(id);
     }
     async exists(id) {
-        if (!(await this.prisma.user.count({
+        if (!(await this.usersRepository.exist({
             where: {
                 id,
             },
@@ -96,7 +93,8 @@ let UserService = class UserService {
 };
 UserService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [])
+    __param(0, (0, typeorm_2.InjectRepository)(user_entity_1.UserEntity)),
+    __metadata("design:paramtypes", [typeorm_1.Repository])
 ], UserService);
 exports.UserService = UserService;
 //# sourceMappingURL=user.service.js.map
